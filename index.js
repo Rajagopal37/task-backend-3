@@ -117,8 +117,8 @@ app.post("/login", async(req,res) => {
 
 })
 
-//Get All Users
-app.get("/all-users",authenticateToken, async(req,res) => {
+//Get loggedin  Users
+app.get("/user",authenticateToken, async(req,res) => {
 
     const {user} = req.user;
 
@@ -139,6 +139,35 @@ app.get("/all-users",authenticateToken, async(req,res) => {
     });
 
 })
+
+
+//Get all users
+app.get("/all-users", authenticateToken, async (req, res) => {
+    try {
+        // Find all users in the database
+        const users = await User.find({}, 'fullname email createdOn'); // Only return specific fields
+
+        // Check if there are any users
+        if (!users || users.length === 0) {
+            return res.status(404).json({ message: "No users found" });
+        }
+
+        return res.json({
+            error: false,
+            users,  // Return all users
+            message: "All Users retrieved successfully",
+        });
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return res.status(500).json({
+            error: true,
+            message: "Internal Server Error",
+        });
+    }
+});
+
+
+
 
 //Add Task
 app.post( "/add-task",authenticateToken, async(req,res) => {
@@ -288,9 +317,6 @@ app.delete( "/delete-task/:taskId",authenticateToken, async(req,res) => {
     }
 
 })
-
-
-
 
 
 app.listen(8000);
