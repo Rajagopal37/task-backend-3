@@ -7,10 +7,8 @@ mongoose.connect(config.connectionString)
 .then(()=> console.log("MongoDB connected"))
 .catch((err)=> console.log("MongoDB not connected", err))
 
-
 const User = require("./models/user.model")
 const Task = require("./models/task.model")
-
 
 const express = require ("express");
 const cors = require ("cors")
@@ -78,6 +76,7 @@ app.post("/create-account",async(req,res)=>{
 
     
 })
+
 
 //Login
 app.post("/login", async(req,res) => {
@@ -166,7 +165,13 @@ app.get("/all-users", authenticateToken, async (req, res) => {
     }
 });
 
-
+// Logout
+app.post("/logout", authenticateToken, (req, res) => {
+    
+    res.json({
+        message: "Logout Successful"
+    });
+});
 
 
 //Add Task
@@ -264,6 +269,7 @@ app.put( "/edit-task/:noteId",authenticateToken, async(req,res) => {
     }
 })
 
+
 //Get All Tasks
 app.get( "/all-tasks",authenticateToken, async(req,res) => {
 
@@ -285,6 +291,7 @@ app.get( "/all-tasks",authenticateToken, async(req,res) => {
     }
 
 })
+
 
 //Delete Tasks
 app.delete( "/delete-task/:taskId",authenticateToken, async(req,res) => {
