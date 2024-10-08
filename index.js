@@ -1,5 +1,7 @@
+
 // Load environment variables
 require('dotenv').config();
+
 
 // Import required modules
 const mongoose = require('mongoose');
@@ -8,21 +10,26 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const { authenticateToken } = require('./utilities');
 
+
 // Import models
 const User = require('./models/user.model');
 const Task = require('./models/task.model');
 const config = require('./config.json');
 
+
 // Create an instance of Express
 const app = express();
 
+
 // Define the port
 const PORT = process.env.PORT || 8000;
+
 
 // Connect to MongoDB
 mongoose.connect(config.connectionString)
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.log('MongoDB not connected', err));
+
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -30,10 +37,13 @@ app.use(cors({
     origin: "*", // Allow all origins for development, adjust for production
 }));
 
+
+
 // Routes
 app.get("/", (req, res) => {
     res.json({ data: "Welcome to the Task Management API" });
 });
+
 
 // Create account
 app.post("/create-account", async (req, res) => {
@@ -61,6 +71,7 @@ app.post("/create-account", async (req, res) => {
     return res.json({ error: false, user, accessToken, message: "Registration Successful" });
 });
 
+
 // Login
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -86,6 +97,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
+
 // Get logged-in user
 app.get("/user", authenticateToken, async (req, res) => {
     const { user } = req.user;
@@ -106,6 +118,7 @@ app.get("/user", authenticateToken, async (req, res) => {
     });
 });
 
+
 // Get all users
 app.get("/all-users", authenticateToken, async (req, res) => {
     try {
@@ -120,10 +133,12 @@ app.get("/all-users", authenticateToken, async (req, res) => {
     }
 });
 
+
 // Logout
 app.post("/logout", authenticateToken, (req, res) => {
     res.json({ message: "Logout Successful." });
 });
+
 
 // Add Task
 app.post("/add-task", authenticateToken, async (req, res) => {
@@ -159,6 +174,7 @@ app.post("/add-task", authenticateToken, async (req, res) => {
     }
 });
 
+
 // Edit Task
 app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
     const taskId = req.params.taskId;
@@ -187,6 +203,7 @@ app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
     }
 });
 
+
 // Get All Tasks
 app.get("/all-tasks", authenticateToken, async (req, res) => {
     const { user } = req.user;
@@ -198,6 +215,7 @@ app.get("/all-tasks", authenticateToken, async (req, res) => {
         return res.status(500).json({ error: true, message: "Server Error." });
     }
 });
+
 
 // Delete Task
 app.delete("/delete-task/:taskId", authenticateToken, async (req, res) => {
@@ -215,6 +233,7 @@ app.delete("/delete-task/:taskId", authenticateToken, async (req, res) => {
         return res.status(500).json({ error: true, message: "Internal Server Error." });
     }
 });
+
 
 // Start the server
 app.listen(PORT, () => {
