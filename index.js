@@ -47,6 +47,8 @@ app.get("/", (req, res) => {
 
 // Create account
 app.post("/create-account", async (req, res) => {
+    // res.set('Cache-Control', 'no-store'); // Prevent caching for this response
+
     const { fullname, email, password } = req.body;
 
     if (!fullname) {
@@ -68,12 +70,14 @@ app.post("/create-account", async (req, res) => {
     await user.save();
 
     const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "3600m" });
-    return res.json({ error: false, user, accessToken, message: "Registration Successful" });
+    return res.status(200).json({ error: false, user, accessToken, message: "Registration Successful" });
 });
 
 
 // Login
 app.post("/login", async (req, res) => {
+    // res.set('Cache-Control', 'no-store'); // Prevent caching for this response
+
     const { email, password } = req.body;
 
     if (!email) {
@@ -90,8 +94,10 @@ app.post("/login", async (req, res) => {
 
     if (userInfo.email === email && userInfo.password === password) {
         const user = { user: userInfo };
+
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "3600m" });
-        return res.json({ error: false, message: "Login Successful", email, accessToken });
+        return res.status(200).json({ error: false, message: "Login Successful", email, accessToken });
+        
     } else {
         return res.status(400).json({ error: true, message: "Invalid Credentials." });
     }
