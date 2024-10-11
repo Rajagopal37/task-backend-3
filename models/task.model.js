@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const taskSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
-  status: { type: String, enum: ['Completed', 'Not Completed'], default: 'Not Completed' },
+  status: { type: String, enum: ['Completed', 'Incomplete'], default: 'Incomplete' },
   assignDate: { type: Date, required: true },
   lastDate: { type: Date, required: true },
   userId: { type: String, required: true },
