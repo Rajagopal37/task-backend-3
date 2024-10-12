@@ -8,6 +8,4 @@ const userSchema = new Schema( {
     createdOn : { type: Date, default: new Date().getTime() }
 })
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);
