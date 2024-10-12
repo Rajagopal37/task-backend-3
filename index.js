@@ -138,7 +138,7 @@ app.post("/logout", authenticateToken, (req, res) => {
 
 // Add Task
 app.post("/add-task", authenticateToken, async (req, res) => {
-    const { name, description, assignDate, lastDate } = req.body;
+    const { name, description, assignDate, lastDate, status } = req.body;
     const { user } = req.user;
 
     if (!name) {
@@ -159,6 +159,7 @@ app.post("/add-task", authenticateToken, async (req, res) => {
             name,
             description,
             assignDate,
+            status,
             lastDate,
             userId: user._id,
         });
@@ -174,7 +175,7 @@ app.post("/add-task", authenticateToken, async (req, res) => {
 // Edit Task
 app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
     const taskId = req.params.taskId;
-    const { name, description, assignDate, lastDate } = req.body;
+    const { name, description, assignDate, lastDate,status } = req.body;
     const { user } = req.user;
 
     if (!name && !description && !assignDate && !lastDate) {
@@ -191,6 +192,7 @@ app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
         if (description) task.description = description;
         if (assignDate) task.assignDate = assignDate;
         if (lastDate) task.lastDate = lastDate;
+        if (status) task.status = status;
 
         await task.save();
         return res.json({ error: false, task, message: "Task Updated Successfully." });
