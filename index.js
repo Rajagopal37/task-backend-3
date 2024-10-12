@@ -1,53 +1,43 @@
-
-// Load environment variables
-require('dotenv').config();
-
-
-// Import required modules
-const mongoose = require('mongoose');
-const express = require('express');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const { authenticateToken } = require('./utilities');
-
-
-// Import models
-const User = require('./models/user.model');
-const Task = require('./models/task.model');
 const config = require('./config.json');
 
+require('dotenv').config();
 
-// Create an instance of Express
-const app = express();
-
-
-// Define the port
-const PORT = process.env.PORT || 8000;
-
-
-// Connect to MongoDB
+const mongoose = require('mongoose');
 mongoose.connect(config.connectionString)
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.log('MongoDB not connected', err));
 
+const jwt = require('jsonwebtoken');
+const { authenticateToken } = require('./utilities');
 
-// Middleware to parse JSON
+const cors = require('cors');
+
+const express = require('express');
+const app = express();
+
 app.use(express.json());
 app.use(cors({
-    origin: "*", // Allow all origins for development, adjust for production
+    origin: "*",
 }));
 
+app.use((err, req, res, next) => {
+    console.error("Error occurred:", err);
+    res.status(500).send("Internal Server Error");
+});
 
+const PORT = process.env.PORT || 8000;
 
-// Routes
 app.get("/", (req, res) => {
     res.json({ data: "Welcome to the Task Management API" });
 });
 
+const User = require('./models/user.model');
+const Task = require('./models/task.model');
+
+
 
 // Create account
 app.post("/create-account", async (req, res) => {
-    // res.set('Cache-Control', 'no-store'); // Prevent caching for this response
 
     const { fullname, email, password } = req.body;
 
@@ -210,8 +200,10 @@ app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
 });
 
 
+
 // Get All Tasks
 app.get("/all-tasks", authenticateToken, async (req, res) => {
+
     const { user } = req.user;
 
     try {
@@ -240,8 +232,6 @@ app.delete("/delete-task/:taskId", authenticateToken, async (req, res) => {
     }
 });
 
-
-// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
 });
