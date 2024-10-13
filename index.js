@@ -117,23 +117,72 @@ app.post("/login", async (req, res) => {
 
 
 // Get logged-in user
+
+// app.get("/get-user", authenticateToken, async (req, res) => {
+//     const { user } = req.user;
+  
+//     const isUser = await User.findOne({ _id: user._id });
+  
+//     if (!isUser) {
+//       return res.sendStatus(401);
+//     }
+  
+//     return res.json({
+//                 user: {
+//                     fullname: isUser.fullname,
+//                     email: isUser.email,
+//                     "_id": isUser._id,
+//                     createdOn: isUser.createdOn,
+//                 },
+//                 message: "User retrieved successfully.",
+//             });
+//   });
+  
+
+// app.get("/user", authenticateToken, async (req, res) => {
+//     const { user } = req.user;
+
+//     const isUser = await User.findOne({ _id: user._id });
+//     if (!isUser) {
+//         return res.sendStatus(401);
+//     }
+
+//     return res.json({
+//         user: {
+//             fullname: isUser.fullname,
+//             email: isUser.email,
+//             "_id": isUser._id,
+//             createdOn: isUser.createdOn,
+//         },
+//         message: "User retrieved successfully.",
+//     });
+// });
+
+
+// Get logged-in user
 app.get("/user", authenticateToken, async (req, res) => {
-    const { user } = req.user;
+    // Access user ID directly from req.user
+    const userId = req.user.user._id;
 
-    const isUser = await User.findOne({ _id: user._id });
-    if (!isUser) {
-        return res.sendStatus(401);
+    try {
+        const isUser = await User.findById(userId).select('fullname email _id createdOn');
+        if (!isUser) {
+            return res.sendStatus(404); // User not found
+        }
+
+        return res.json({
+            
+                fullname: isUser.fullname,
+                email: isUser.email,
+                "_id": isUser._id,
+                createdOn: isUser.createdOn,
+        
+            message: "User retrieved successfully.",
+        });
+    } catch (err) {
+        console.error("Error retrieving user:", err);
+        return res.status(500).json({ error: true, message: "Internal Server Error." });
     }
-
-    return res.json({
-        user: {
-            fullname: isUser.fullname,
-            email: isUser.email,
-            "_id": isUser._id,
-            createdOn: isUser.createdOn,
-        },
-        message: "User retrieved successfully.",
-    });
 });
 
 
