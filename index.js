@@ -74,7 +74,7 @@ app.post("/create-account", async (req, res) => {
     await user.save();
   
     const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "36000m",
+      expiresIn: "3600m",
     });
   
     return res.json({
@@ -153,8 +153,8 @@ app.get("/all-users", authenticateToken, async (req, res) => {
 
 
 // Logout
-app.post("/logout", authenticateToken, (req, res) => {
-    res.json({ message: "Logout Successful." });
+app.post("/logout", authenticateToken, async (req, res) => {
+    
 });
 
 
@@ -222,7 +222,6 @@ app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
         return res.status(500).json({ error: true, message: "Internal Server Error." });
     }
 });
-
 
 
 // Get All Tasks

@@ -8,7 +8,7 @@ const taskSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   status: { type: String,default: 'Incomplete' },
   createdOn:{type:Date, default: new Date().getTime()},
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to the user
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, 
 });
 
 module.exports = mongoose.model('Task', taskSchema);
