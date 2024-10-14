@@ -17,8 +17,8 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    // origin: "*",
-    origin: 'https://taskmanagergopal.netlify.app/',
+    origin: "*",
+    // origin: 'https://taskmanagergopal.netlify.app/',
 
 }));
 
