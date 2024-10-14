@@ -161,6 +161,18 @@ app.get("/all-users", authenticateToken, async (req, res) => {
 
 // Logout
 app.post("/logout", authenticateToken, async (req, res) => {
+
+    try {
+        res.clearCookie("jwt")
+        console.log("logout Successfully")
+
+        await req.user.save()
+        res.render("login")
+    } catch (error) {
+        return res.status(500).json({ 
+            error: true, 
+            message: "Internal Server Error." });
+    }
     
 });
 
