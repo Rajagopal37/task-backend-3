@@ -4,8 +4,8 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 mongoose.connect(config.connectionString)
-    .then(() => console.log('MongoDB connected'))
-    .catch((err) => console.log('MongoDB not connected', err));
+        .then(() => console.log('MongoDB connected'))
+        .catch((err) => console.log('MongoDB not connected', err));
 
 const jwt = require('jsonwebtoken');
 const { authenticateToken } = require('./utilities');
@@ -118,49 +118,6 @@ app.post("/login", async (req, res) => {
 
 
 // Get logged-in user
-
-// app.get("/get-user", authenticateToken, async (req, res) => {
-//     const { user } = req.user;
-  
-//     const isUser = await User.findOne({ _id: user._id });
-  
-//     if (!isUser) {
-//       return res.sendStatus(401);
-//     }
-  
-//     return res.json({
-//                 user: {
-//                     fullname: isUser.fullname,
-//                     email: isUser.email,
-//                     "_id": isUser._id,
-//                     createdOn: isUser.createdOn,
-//                 },
-//                 message: "User retrieved successfully.",
-//             });
-//   });
-  
-
-// app.get("/user", authenticateToken, async (req, res) => {
-//     const { user } = req.user;
-
-//     const isUser = await User.findOne({ _id: user._id });
-//     if (!isUser) {
-//         return res.sendStatus(401);
-//     }
-
-//     return res.json({
-//         user: {
-//             fullname: isUser.fullname,
-//             email: isUser.email,
-//             "_id": isUser._id,
-//             createdOn: isUser.createdOn,
-//         },
-//         message: "User retrieved successfully.",
-//     });
-// });
-
-
-// Get logged-in user
 app.get("/user", authenticateToken, async (req, res) => {
     // Access user ID directly from req.user
     const userId = req.user.user._id;
@@ -231,15 +188,24 @@ app.post("/add-task", authenticateToken, async (req, res) => {
             name,
             description,
             assignDate,
-            status,
             lastDate,
+            status, 
             userId: user._id,
         });
+
         await task.save();
-        return res.json({ error: false, message: "Task Created Successfully." });
+        
+        return res.json({ 
+            error: false, 
+            task,
+            message: "Task Created Successfully.",
+        });
     } catch (error) {
         console.log("Error creating task", error);
-        return res.status(500).json({ error: true, message: "Internal Server Error." });
+        return res.status(500).json({ 
+            error: true, 
+            message: "Internal Server Error.",
+         });
     }
 });
 
