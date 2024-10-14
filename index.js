@@ -19,7 +19,6 @@ app.use(express.json());
 app.use(cors({
     origin: "*",
     // origin: 'https://taskmanagergopal.netlify.app/',
-
 }));
 
 app.use((err, req, res, next) => {
