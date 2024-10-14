@@ -217,11 +217,14 @@ app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
     const { user } = req.user;
 
     if (!name && !description && !assignDate && !lastDate) {
-        return res.status(400).json({ error: true, message: "No changes provided." });
+        return res.status(400).json({
+             error: true, 
+             message: "No changes provided." });
     }
 
     try {
         const task = await Task.findOne({ _id: taskId, userId: user._id });
+
         if (!task) {
             return res.status(404).json({ error: true, message: "Task Not Found." });
         }
@@ -233,9 +236,15 @@ app.put("/edit-task/:taskId", authenticateToken, async (req, res) => {
         if (status) task.status = status;
 
         await task.save();
-        return res.json({ error: false, task, message: "Task Updated Successfully." });
+
+        return res.json({ 
+            error: false, 
+            task, 
+            message: "Task Updated Successfully." });
     } catch (error) {
-        return res.status(500).json({ error: true, message: "Internal Server Error." });
+        return res.status(500).json({ 
+            error: true, 
+            message: "Internal Server Error." });
     }
 });
 
